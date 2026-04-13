@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Funcionários{% endblock %}
+{% block page_title %}Funcionários{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>👷 Lista de Funcionários</h3>
+    <a href="{{ url_for('funcionario_novo') }}" class="btn btn-primary btn-sm">+ Novo funcionário</a>
+  </div>
+  {% if funcionarios %}
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Cargo</th><th>Telefone</th><th>E-mail</th><th>Status</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for f in funcionarios %}
+      <tr>
+        <td><strong>{{ f.nome }}</strong></td>
+        <td>{{ f.cargo }}</td>
+        <td>{{ f.telefone or '—' }}</td>
+        <td>{{ f.email or '—' }}</td>
+        <td>
+          {% if f.ativo %}<span class="badge badge-green">Ativo</span>
+          {% else %}<span class="badge badge-gray">Inativo</span>{% endif %}
+        </td>
+        <td style="display:flex;gap:8px">
+          <a href="{{ url_for('funcionario_editar', id=f.id) }}" class="btn btn-secondary btn-sm">✏️ Editar</a>
+          <form method="post" action="{{ url_for('funcionario_excluir', id=f.id) }}"
+                onsubmit="return confirm('Excluir {{ f.nome }}?')">
+            <button class="btn btn-danger btn-sm">🗑️ Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">👷</div><p>Nenhum funcionário cadastrado.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

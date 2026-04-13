@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Agendamentos{% endblock %}
+{% block page_title %}Agendamentos{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>📅 Lista de Agendamentos</h3>
+    <a href="{{ url_for('agendamento_novo') }}" class="btn btn-primary btn-sm">+ Novo agendamento</a>
+  </div>
+  {% if agendamentos %}
+  <table>
+    <thead>
+      <tr><th>Data/Hora</th><th>Pet</th><th>Cliente</th><th>Serviço</th><th>Funcionário</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for a in agendamentos %}
+      <tr>
+        <td>{{ a.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>🐾 {{ a.pet }}</td>
+        <td>{{ a.cliente }}</td>
+        <td>{{ a.servico }}</td>
+        <td>{{ a.funcionario or '—' }}</td>
+        <td>R$ {{ '%.2f'|format(a.preco) }}</td>
+        <td>
+          {% if a.status == 'agendado' %}<span class="badge badge-yellow">Agendado</span>
+          {% elif a.status == 'concluido' %}<span class="badge badge-green">Concluído</span>
+          {% else %}<span class="badge badge-red">Cancelado</span>{% endif %}
+        </td>
+        <td>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <a href="{{ url_for('agendamento_editar', id=a.id) }}" class="btn btn-secondary btn-sm">✏️</a>
+            {% if a.status == 'agendado' %}
+            <form method="post" action="{{ url_for('agendamento_status', id=a.id) }}">
+              <input type="hidden" name="status" value="concluido">
+              <button class="btn btn-sm" style="background:#d1fae5;color:#065f46">✅</button>
+            </form>
+            <form method="post" action="{{ url_for('agendamento_status', id=a.id) }}">
+              <input type="hidden" name="status" value="cancelado">
+              <button class="btn btn-sm" style="background:#fee2e2;color:#991b1b">❌</button>
+            </form>
+            {% endif %}
+            <form method="post" action="{{ url_for('agendamento_excluir', id=a.id) }}"
+                  onsubmit="return confirm('Excluir este agendamento?')">
+              <button class="btn btn-danger btn-sm">🗑️</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum agendamento encontrado.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

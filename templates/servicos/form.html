@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if action=='editar' else 'Novo' }} Serviço{% endblock %}
+{% block page_title %}{{ 'Editar' if action=='editar' else 'Novo' }} Serviço{% endblock %}
+{% block content %}
+<div class="form-card">
+  <form method="post">
+    <div class="form-group">
+      <label>Nome do Serviço *</label>
+      <input name="nome" value="{{ servico.get('nome','') }}" required placeholder="Ex: Banho + Tosa">
+    </div>
+    <div class="form-group">
+      <label>Descrição</label>
+      <textarea name="descricao" placeholder="Descreva o serviço...">{{ servico.get('descricao','') }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Preço (R$) *</label>
+        <input name="preco" type="number" step="0.01" min="0" value="{{ servico.get('preco','') }}" required placeholder="0,00">
+      </div>
+      <div class="form-group">
+        <label>Duração (minutos)</label>
+        <input name="duracao_min" type="number" min="1" value="{{ servico.get('duracao_min', 60) }}" placeholder="60">
+      </div>
+    </div>
+    {% if action == 'editar' %}
+    <div class="form-group">
+      <div class="checkbox-row">
+        <input name="ativo" type="checkbox" id="ativo" {{ 'checked' if servico.get('ativo') }}>
+        <label for="ativo" style="margin:0">Serviço ativo</label>
+      </div>
+    </div>
+    {% endif %}
+    <div class="form-actions">
+      <button class="btn btn-primary">💾 Salvar</button>
+      <a href="{{ url_for('servicos') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Clientes{% endblock %}
+{% block page_title %}Clientes{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>👤 Lista de Clientes</h3>
+    <a href="{{ url_for('cliente_novo') }}" class="btn btn-primary btn-sm">+ Novo cliente</a>
+  </div>
+  {% if clientes %}
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for c in clientes %}
+      <tr>
+        <td><strong>{{ c.nome }}</strong></td>
+        <td>{{ c.cpf or '—' }}</td>
+        <td>{{ c.telefone }}</td>
+        <td>{{ c.email or '—' }}</td>
+        <td style="display:flex;gap:8px">
+          <a href="{{ url_for('cliente_editar', id=c.id) }}" class="btn btn-secondary btn-sm">✏️ Editar</a>
+          <form method="post" action="{{ url_for('cliente_excluir', id=c.id) }}"
+                onsubmit="return confirm('Excluir {{ c.nome }}?')">
+            <button class="btn btn-danger btn-sm">🗑️ Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">👤</div>
+    <p>Nenhum cliente cadastrado ainda.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

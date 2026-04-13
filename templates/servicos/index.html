@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Serviços{% endblock %}
+{% block page_title %}Serviços{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>✂️ Lista de Serviços</h3>
+    <a href="{{ url_for('servico_novo') }}" class="btn btn-primary btn-sm">+ Novo serviço</a>
+  </div>
+  {% if servicos %}
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Descrição</th><th>Preço</th><th>Duração</th><th>Status</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for s in servicos %}
+      <tr>
+        <td><strong>{{ s.nome }}</strong></td>
+        <td>{{ s.descricao or '—' }}</td>
+        <td>R$ {{ '%.2f'|format(s.preco) }}</td>
+        <td>{{ s.duracao_min }} min</td>
+        <td>
+          {% if s.ativo %}<span class="badge badge-green">Ativo</span>
+          {% else %}<span class="badge badge-gray">Inativo</span>{% endif %}
+        </td>
+        <td style="display:flex;gap:8px">
+          <a href="{{ url_for('servico_editar', id=s.id) }}" class="btn btn-secondary btn-sm">✏️ Editar</a>
+          <form method="post" action="{{ url_for('servico_excluir', id=s.id) }}"
+                onsubmit="return confirm('Excluir {{ s.nome }}?')">
+            <button class="btn btn-danger btn-sm">🗑️ Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">✂️</div><p>Nenhum serviço cadastrado.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

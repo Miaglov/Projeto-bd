@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if action=='editar' else 'Novo' }} Agendamento{% endblock %}
+{% block page_title %}{{ 'Editar' if action=='editar' else 'Novo' }} Agendamento{% endblock %}
+{% block content %}
+<div class="form-card">
+  <form method="post">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Pet *</label>
+        <select name="pet_id" required>
+          <option value="">Selecione o pet...</option>
+          {% for p in pets %}
+          <option value="{{ p.id }}" {{ 'selected' if ag.get('pet_id')|string == p.id|string }}>
+            {{ p.nome }} ({{ p.dono }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Serviço *</label>
+        <select name="servico_id" required>
+          <option value="">Selecione o serviço...</option>
+          {% for s in servicos %}
+          <option value="{{ s.id }}" {{ 'selected' if ag.get('servico_id')|string == s.id|string }}>
+            {{ s.nome }} — R$ {{ '%.2f'|format(s.preco) }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Data e Hora *</label>
+        <input name="data_hora" type="datetime-local" required
+               value="{{ ag.get('data_hora_fmt', ag.get('data_hora','')) }}">
+      </div>
+      <div class="form-group">
+        <label>Funcionário responsável</label>
+        <select name="funcionario_id">
+          <option value="">Sem preferência</option>
+          {% for f in funcionarios %}
+          <option value="{{ f.id }}" {{ 'selected' if ag.get('funcionario_id')|string == f.id|string }}>
+            {{ f.nome }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    {% if action == 'editar' %}
+    <div class="form-group">
+      <label>Status</label>
+      <select name="status">
+        {% for s in ['agendado','concluido','cancelado'] %}
+        <option value="{{ s }}" {{ 'selected' if ag.get('status')==s }}>{{ s|capitalize }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    <div class="form-group">
+      <label>Observações</label>
+      <textarea name="observacoes" placeholder="Alguma observação especial...">{{ ag.get('observacoes','') }}</textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary">💾 Salvar</button>
+      <a href="{{ url_for('agendamentos') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

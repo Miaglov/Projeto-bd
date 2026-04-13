@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Pets{% endblock %}
+{% block page_title %}Pets{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>🐾 Lista de Pets</h3>
+    <a href="{{ url_for('pet_novo') }}" class="btn btn-primary btn-sm">+ Novo pet</a>
+  </div>
+  {% if pets %}
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Espécie</th><th>Raça</th><th>Idade</th><th>Peso</th><th>Dono</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for p in pets %}
+      <tr>
+        <td><strong>{{ p.nome }}</strong></td>
+        <td>{{ p.especie }}</td>
+        <td>{{ p.raca or '—' }}</td>
+        <td>{{ p.idade ~ ' anos' if p.idade else '—' }}</td>
+        <td>{{ ('%.1f kg' % p.peso) if p.peso else '—' }}</td>
+        <td>{{ p.dono }}</td>
+        <td style="display:flex;gap:8px">
+          <a href="{{ url_for('pet_editar', id=p.id) }}" class="btn btn-secondary btn-sm">✏️ Editar</a>
+          <form method="post" action="{{ url_for('pet_excluir', id=p.id) }}"
+                onsubmit="return confirm('Excluir {{ p.nome }}?')">
+            <button class="btn btn-danger btn-sm">🗑️ Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">🐶</div><p>Nenhum pet cadastrado.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

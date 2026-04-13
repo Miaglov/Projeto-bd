@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-icon">👤</span>
+    <div>
+      <div class="stat-label">Clientes</div>
+      <div class="stat-value">{{ stats.clientes }}</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">🐶</span>
+    <div>
+      <div class="stat-label">Pets</div>
+      <div class="stat-value">{{ stats.pets }}</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">📅</span>
+    <div>
+      <div class="stat-label">Agendados</div>
+      <div class="stat-value">{{ stats.agendamentos }}</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">👷</span>
+    <div>
+      <div class="stat-label">Funcionários</div>
+      <div class="stat-value">{{ stats.funcionarios }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3>📅 Próximos Agendamentos</h3>
+    <a href="{{ url_for('agendamento_novo') }}" class="btn btn-primary btn-sm">+ Novo agendamento</a>
+  </div>
+  {% if proximos %}
+  <table>
+    <thead>
+      <tr><th>Data/Hora</th><th>Pet</th><th>Cliente</th><th>Serviço</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for a in proximos %}
+      <tr>
+        <td>{{ a.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>🐾 {{ a.pet }}</td>
+        <td>{{ a.cliente }}</td>
+        <td>{{ a.servico }}</td>
+        <td><span class="badge badge-green">agendado</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">📭</div>
+    <p>Nenhum agendamento próximo.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
